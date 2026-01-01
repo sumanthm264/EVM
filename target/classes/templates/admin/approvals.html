@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: content(~{::section})}">
 
 <head>
     <title>Pending Approvals</title>
 </head>
 
 <body>
-    <div layout:fragment="content">
-        <section class="fade-in">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    <section class="fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="fw-bold mb-1 text-dark">Pending Approvals</h2>
                     <p class="text-muted mb-0">Manage and verify new event manager accounts</p>
@@ -100,7 +99,6 @@
                 </div>
             </div>
         </section>
-    </div>
 </body>
 
 </html>

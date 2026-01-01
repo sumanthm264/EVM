@@ -34,10 +34,20 @@ public class SupportTicketServiceImpl implements SupportTicketService {
     }
 
     @Override
+    public SupportTicket getTicketById(Long id) {
+        return supportTicketRepository.findById(id).orElseThrow();
+    }
+
+    @Override
     public SupportTicket resolveTicket(Long id) {
         SupportTicket ticket = supportTicketRepository.findById(id).orElseThrow();
         ticket.setTicketStatus("RESOLVED");
         ticket.setResolvedDate(LocalDateTime.now());
         return supportTicketRepository.save(ticket);
+    }
+    
+    @Override
+    public long countOpenTickets() {
+        return supportTicketRepository.countByTicketStatus("OPEN");
     }
 }

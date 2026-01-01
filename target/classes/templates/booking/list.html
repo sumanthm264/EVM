@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: content(~{::section})}">
 
 <head>
     <title>Bookings</title>
@@ -46,9 +47,9 @@
                                     </span>
                                     
                                     <span th:if="${booking.status == 'CONFIRMED'}">
-                                        <!-- CONFIRMED: Tick mark + Cancel (wrong mark) -->
+                                        <!-- CONFIRMED: Tick mark (only for admin/manager) + Cancel -->
                                         <a th:href="@{/bookings/complete/{id}(id=${booking.bookingId})}"
-                                            class="btn btn-sm btn-outline-success complete-booking-btn"><i class="fas fa-check"></i></a>
+                                            class="btn btn-sm btn-outline-success complete-booking-btn" sec:authorize="hasAnyRole('ADMIN', 'EVENT_MANAGER')"><i class="fas fa-check"></i></a>
                                         <a th:href="@{/bookings/cancel/{id}(id=${booking.bookingId})}"
                                             class="btn btn-sm btn-outline-danger ms-1 cancel-booking-btn"><i class="fas fa-times"></i></a>
                                     </span>

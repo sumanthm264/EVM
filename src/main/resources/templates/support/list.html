@@ -10,8 +10,18 @@
     <section class="fade-in">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h3 mb-0 text-gray-800 fw-bold">Support Tickets</h2>
-            <a th:href="@{/support/create}" class="btn btn-warning shadow-sm fw-bold"><i
+            <a th:href="@{/support/create}" class="btn btn-warning shadow-sm fw-bold" sec:authorize="hasAnyRole('EVENT_MANAGER', 'CUSTOMER')"><i
                     class="fas fa-plus fa-sm me-2"></i>New Ticket</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+            <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
         <div class="card shadow border-0">
@@ -24,7 +34,7 @@
                                 <th>Issue</th>
                                 <th>Status</th>
                                 <th>Created</th>
-                                <th sec:authorize="hasRole('ADMIN')">Action</th>
+                                <th sec:authorize="hasAnyRole('ADMIN', 'EVENT_MANAGER')">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,10 +48,17 @@
                                 </td>
                                 <td class="small text-muted"
                                     th:text="${#temporals.format(ticket.createdDate, 'yyyy-MM-dd HH:mm')}">Date</td>
-                                <td sec:authorize="hasRole('ADMIN')">
-                                    <a th:if="${ticket.ticketStatus == 'OPEN'}"
-                                        th:href="@{/support/resolve/{id}(id=${ticket.ticketId})}"
-                                        class="btn btn-sm btn-success shadow-sm">Resolve</a>
+                                <td>
+                                    <!-- Show resolve button to ADMIN for all tickets -->
+                                    <!-- Show resolve button to EVENT_MANAGER only if ticket was created by customer (not by another manager) -->
+                                    <a th:if="${ticket.ticketStatus == 'OPEN'}" 
+                                       sec:authorize="hasRole('ADMIN')"
+                                       th:href="@{/support/resolve/{id}(id=${ticket.ticketId})}"
+                                       class="btn btn-sm btn-success shadow-sm">Resolve</a>
+                                    <a th:if="${ticket.ticketStatus == 'OPEN' && ticket.customer.role.name() != 'EVENT_MANAGER'}" 
+                                       sec:authorize="hasRole('EVENT_MANAGER')"
+                                       th:href="@{/support/resolve/{id}(id=${ticket.ticketId})}"
+                                       class="btn btn-sm btn-success shadow-sm">Resolve</a>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(tickets)}">

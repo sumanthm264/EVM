@@ -8,5 +8,7 @@ public interface SupportTicketService {
     List<SupportTicket> getAllTickets();
     List<SupportTicket> getCustomerTickets(User user);
     SupportTicket createTicket(SupportTicket ticket);
+    SupportTicket getTicketById(Long id);
     SupportTicket resolveTicket(Long id);
+    long countOpenTickets();
 }
