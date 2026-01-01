@@ -22,7 +22,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getCustomerBookings(User user) {
-        return bookingRepository.findByCustomer(user);
+        return bookingRepository.findByUser(user);
     }
 
     @Override

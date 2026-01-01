@@ -78,7 +78,7 @@ public class BookingController {
             booking.setVenue(venue);
             
             User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-            booking.setCustomer(user);
+            booking.setUser(user);
             
             // Set start date to current date if not provided
             if (booking.getEventDate() == null) {

@@ -12,8 +12,8 @@ public class Booking {
     private Long bookingId;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "venue_id", nullable = false)
@@ -32,9 +32,9 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(Long bookingId, User customer, Venue venue, LocalDate eventDate, String eventType, String status) {
+    public Booking(Long bookingId, User user, Venue venue, LocalDate eventDate, String eventType, String status) {
         this.bookingId = bookingId;
-        this.customer = customer;
+        this.user = user;
         this.venue = venue;
         this.eventDate = eventDate;
         this.eventType = eventType;
@@ -49,12 +49,12 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public User getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(User customer) {
-        this.customer = customer;
+    public void setUser(User customer) {
+        this.user = customer;
     }
 
     public Venue getVenue() {
