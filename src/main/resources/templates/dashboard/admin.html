@@ -75,7 +75,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs fw-bold text-info text-uppercase mb-1">Support Tickets</div>
-                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${tickets != null ? #lists.size(tickets) : 0}">0</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${openTicketsCount}">0</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-headset fa-2x text-gray-300"></i>

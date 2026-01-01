@@ -14,38 +14,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class DashboardController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private VenueService venueService;
+	@Autowired
+	private VenueService venueService;
 
-    @Autowired
-    private BookingService bookingService;
+	@Autowired
+	private BookingService bookingService;
 
-    @Autowired
-    private SupportTicketService supportTicketService;
+	@Autowired
+	private SupportTicketService supportTicketService;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @GetMapping("/dashboard")
-    public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
-        
-        return switch (user.getRole()) {
-            case ADMIN -> {
-                // Add data for admin dashboard
-                model.addAttribute("venues", venueService.getAllVenues());
-                model.addAttribute("bookings", bookingService.getAllBookings());
-                model.addAttribute("tickets", supportTicketService.getAllTickets());
-                model.addAttribute("pendingApprovals", userRepository.findAll().stream()
-                        .filter(u -> u.getRole() == Role.EVENT_MANAGER && !u.isEnabled())
-                        .toList());
-                yield "dashboard/admin";
-            }
-            case EVENT_MANAGER -> "dashboard/manager";
-            default -> "dashboard/index";
-        };
-    }
+	@GetMapping("/dashboard")
+	public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+		User user = userService.findByUsername(userDetails.getUsername()).orElseThrow();
+
+		return switch (user.getRole()) {
+		case ADMIN -> {
+			// Add data for admin dashboard
+			model.addAttribute("venues", venueService.getAllVenues());
+			model.addAttribute("bookings", bookingService.getAllBookings());
+			model.addAttribute("openTicketsCount", supportTicketService.countOpenTickets());
+			model.addAttribute("pendingApprovals", userRepository.findAll().stream()
+					.filter(u -> u.getRole() == Role.EVENT_MANAGER && !u.isEnabled()).toList());
+			yield "dashboard/admin";
+		}
+		case EVENT_MANAGER -> "dashboard/manager";
+		default -> "dashboard/index";
+		};
+	}
 }
