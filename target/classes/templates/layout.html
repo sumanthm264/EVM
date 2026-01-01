@@ -162,8 +162,15 @@
             <div class="sidebar-col d-none d-lg-block">
                 <div class="d-flex flex-column px-4">
                     <div class="mb-4">
-                        <small class="text-uppercase fw-bold text-muted"
-                            style="font-size: 0.7rem; letter-spacing: 1px;">Admin Panel</small>
+                       <small class="text-uppercase fw-bold text-muted"
+       style="font-size: 0.7rem; letter-spacing: 1px;">
+
+    <span sec:authorize="hasRole('ADMIN')">Admin Panel</span>
+    <span sec:authorize="hasRole('EVENT_MANAGER')">Manager Panel</span>
+    <span sec:authorize="hasRole('CUSTOMER')">User Panel</span>
+
+</small>
+
                     </div>
                     <ul class="nav flex-column gap-2">
                         <li class="nav-item">
