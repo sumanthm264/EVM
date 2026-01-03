@@ -4,6 +4,7 @@ import com.venue.management.entity.Booking;
 import com.venue.management.entity.User;
 import com.venue.management.repository.BookingRepository;
 import com.venue.management.service.BookingService;
+import com.venue.management.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Override
     public List<Booking> getAllBookings() {
@@ -54,7 +58,19 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking updateStatus(Long id, String status) {
         Booking booking = bookingRepository.findById(id).orElseThrow();
+        String oldStatus = booking.getStatus();
         booking.setStatus(status);
+        
+        // If booking is cancelled and payment exists, mark payment as refunded
+        if ("CANCELLED".equals(status) && !"CANCELLED".equals(oldStatus)) {
+            try {
+                paymentService.refundPayment(id);
+            } catch (Exception e) {
+                // Log error but don't fail the booking cancellation
+                System.err.println("Error refunding payment for booking " + id + ": " + e.getMessage());
+            }
+        }
+        
         return bookingRepository.save(booking);
     }
 }

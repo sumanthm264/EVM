@@ -63,7 +63,6 @@
 
 <body>
 
-    <!-- Airbnb Styles Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid px-5">
             <!-- Brand -->
@@ -117,6 +116,8 @@
                         <li><a class="dropdown-item py-2 fw-semibold" th:href="@{/dashboard}">Dashboard</a></li>
                         <li><a class="dropdown-item py-2" th:href="@{/venues}">Browse Venues</a></li>
                         <li><a class="dropdown-item py-2" th:href="@{/bookings}">My Bookings</a></li>
+                        <li><a class="dropdown-item py-2" th:href="@{/payments/my-payments}" sec:authorize="hasRole('CUSTOMER')">My Payments</a></li>
+                        <li><a class="dropdown-item py-2" th:href="@{/payments/admin}" sec:authorize="hasRole('ADMIN')">Payment Management</a></li>
                         <li><a class="dropdown-item py-2" th:href="@{/support}">Support Desk</a></li>
                         <li>
                             <hr class="dropdown-divider">
@@ -197,6 +198,18 @@
                         <li class="nav-item">
                             <a th:href="@{/support}" class="nav-link text-dark fw-semibold rounded-2 px-3 hover-bg-light">
                                 <i class="fas fa-life-ring me-3 text-secondary"></i> Support
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a th:href="@{/payments/my-payments}" 
+                               class="nav-link text-dark fw-semibold rounded-2 px-3 hover-bg-light"
+                               sec:authorize="hasRole('CUSTOMER')">
+                                <i class="fas fa-credit-card me-3 text-secondary"></i> My Payments
+                            </a>
+                            <a th:href="@{/payments/admin}" 
+                               class="nav-link text-dark fw-semibold rounded-2 px-3 hover-bg-light"
+                               sec:authorize="hasRole('ADMIN')">
+                                <i class="fas fa-credit-card me-3 text-secondary"></i> Payments
                             </a>
                         </li>
                     </ul>

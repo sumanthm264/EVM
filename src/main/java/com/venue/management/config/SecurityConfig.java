@@ -45,10 +45,11 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/dashboard", true)
-                .permitAll()
-            )
+            	    .loginPage("/login")
+            	    .defaultSuccessUrl("/dashboard", true)
+            	    .failureUrl("/login?error")
+            	    .permitAll()
+            	)
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")

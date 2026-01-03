@@ -28,6 +28,7 @@ public class DashboardController {
 
 	@Autowired
 	private UserRepository userRepository;
+	
 
 	@GetMapping("/dashboard")
 	public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {

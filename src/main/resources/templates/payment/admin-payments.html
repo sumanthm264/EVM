@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: content(~{::section})}">
+
+<head>
+    <title>Admin - Payment Management</title>
+</head>
+
+<body>
+    <section class="fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3 mb-0 text-gray-800 fw-bold">Payment Management</h2>
+        </div>
+
+        <div class="alert alert-primary border-0 shadow-sm mb-4">
+            <h5 class="alert-heading"><i class="fas fa-chart-line me-2"></i>Payment Analytics</h5>
+            <p class="mb-0">Comprehensive overview of all payment transactions in the system.</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-success text-uppercase mb-1">Total Received</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" 
+                                     th:text="${'₹' + #numbers.formatDecimal(totalEarnings, 1, 2)}">$0.00</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-indian-rupee-sign fa-2x text-gray-300"></i> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-primary text-uppercase mb-1">Successful Payments</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${successfulPaymentsCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-warning text-uppercase mb-1">Pending Payments</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${pendingPaymentsCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-danger text-uppercase mb-1">Refunded Payments</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${refundedPaymentsCount}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-undo fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refunded Amount Card -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-danger text-uppercase mb-1">Total Refunded Amount</div>
+                                <div class="h4 mb-0 fw-bold text-danger" 
+                                     th:text="${'₹' + #numbers.formatDecimal(totalRefundedAmount, 1, 2)}">₹0.00</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-money-bill-wave fa-3x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-info text-uppercase mb-1">Net Revenue</div>
+                                <div class="h4 mb-0 fw-bold text-success" 
+                                     th:text="${'₹' + #numbers.formatDecimal(totalEarnings - totalRefundedAmount, 1, 2)}">$0.00</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-chart-line fa-3x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Payments Table -->
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-list me-2"></i>All Payment Transactions</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0">Payment ID</th>
+                                <th class="border-0">Booking ID</th>
+                                <th class="border-0">Customer</th>
+                                <th class="border-0">Venue</th>
+                                <th class="border-0">Amount</th>
+                                <th class="border-0">Payment Date</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0">Booking Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="payment : ${allPayments}">
+                                <td class="fw-bold" th:text="${payment.paymentId}">1</td>
+                                <td th:text="${payment.booking.bookingId}">100</td>
+                                <td th:text="${payment.booking.user.username}">username</td>
+                                <td th:text="${payment.booking.venue.venueName}">Venue Name</td>
+                                <td class="fw-bold" 
+                                    th:classappend="${payment.booking.status == 'CANCELLED' ? 'text-danger' : 'text-success'}"
+                                    th:text="${'₹' + #numbers.formatDecimal(payment.paymentAmount, 1, 2)}">$0.00</td>
+                                <td th:text="${payment.paymentDate != null ? #temporals.format(payment.paymentDate, 'yyyy-MM-dd HH:mm') : 'N/A'}">2024-01-01 10:00</td>
+                                <td>
+                                    <span th:if="${payment.booking.status == 'CANCELLED'}" 
+                                          class="badge bg-danger rounded-pill">
+                                        <i class="fas fa-undo me-1"></i>REFUNDED
+                                    </span>
+                                    <span th:if="${payment.booking.status != 'CANCELLED' && payment.paymentStatus == 'SUCCESS'}" 
+                                          class="badge bg-success rounded-pill">
+                                        <i class="fas fa-check-circle me-1"></i>SUCCESS
+                                    </span>
+                                    <span th:if="${payment.booking.status != 'CANCELLED' && payment.paymentStatus == 'PENDING'}" 
+                                          class="badge bg-warning rounded-pill">
+                                        <i class="fas fa-clock me-1"></i>PENDING
+                                    </span>
+                                    <span th:if="${payment.booking.status != 'CANCELLED' && payment.paymentStatus == 'FAILED'}" 
+                                          class="badge bg-danger rounded-pill">
+                                        <i class="fas fa-times-circle me-1"></i>FAILED
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill"
+                                        th:classappend="${payment.booking.status == 'CONFIRMED' ? 'bg-success' : (payment.booking.status == 'PENDING' ? 'bg-warning' : (payment.booking.status == 'COMPLETED' ? 'bg-info' : 'bg-danger'))}"
+                                        th:text="${payment.booking.status}">Status</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(allPayments)}">
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                                    <p class="mb-0">No payment records found.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+

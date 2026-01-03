@@ -2,13 +2,16 @@ package com.venue.management.service.impl;
 
 import com.venue.management.entity.Booking;
 import com.venue.management.entity.Payment;
+import com.venue.management.entity.User;
 import com.venue.management.repository.BookingRepository;
 import com.venue.management.repository.PaymentRepository;
 import com.venue.management.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -45,5 +48,54 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment getPaymentById(Long id) {
         return paymentRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<Payment> getUserPayments(User user) {
+        return paymentRepository.findByBooking_User_UserId(user.getUserId());
+    }
+
+    @Override
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void refundPayment(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
+        Payment payment = paymentRepository.findByBooking(booking).orElse(null);
+        
+        if (payment != null && "SUCCESS".equals(payment.getPaymentStatus())) {
+            payment.setPaymentStatus("REFUNDED");
+            paymentRepository.save(payment);
+        }
+    }
+
+    @Override
+    public double getTotalEarnings() {
+        Double total = paymentRepository.sumSuccessfulPayments();
+        return total != null ? total : 0.0;
+    }
+
+    @Override
+    public long getSuccessfulPaymentsCount() {
+        return paymentRepository.countByPaymentStatus("SUCCESS");
+    }
+
+    @Override
+    public long getPendingPaymentsCount() {
+        return paymentRepository.countByPaymentStatus("PENDING");
+    }
+
+    @Override
+    public long getRefundedPaymentsCount() {
+        return paymentRepository.countByPaymentStatus("REFUNDED");
+    }
+
+    @Override
+    public double getTotalRefundedAmount() {
+        Double total = paymentRepository.sumRefundedPayments();
+        return total != null ? total : 0.0;
     }
 }
