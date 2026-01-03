@@ -34,6 +34,7 @@
                                 <th>Issue</th>
                                 <th>Status</th>
                                 <th>Created</th>
+                                <th>Resolution Notes</th>
                                 <th sec:authorize="hasAnyRole('ADMIN', 'EVENT_MANAGER')">Action</th>
                             </tr>
                         </thead>
@@ -49,6 +50,15 @@
                                 <td class="small text-muted"
                                     th:text="${#temporals.format(ticket.createdDate, 'yyyy-MM-dd HH:mm')}">Date</td>
                                 <td>
+                                    <div th:if="${ticket.resolutionNotes != null && !ticket.resolutionNotes.isEmpty()}" 
+                                         class="text-muted small">
+                                        <i class="fas fa-check-circle text-success me-1"></i>
+                                        <span th:text="${ticket.resolutionNotes}">Resolution notes</span>
+                                    </div>
+                                    <span th:if="${ticket.resolutionNotes == null || ticket.resolutionNotes.isEmpty()}" 
+                                          class="text-muted small">-</span>
+                                </td>
+                                <td>
                                     <!-- Show resolve button to ADMIN for all tickets -->
                                     <!-- Show resolve button to EVENT_MANAGER only if ticket was created by customer (not by another manager) -->
                                     <a th:if="${ticket.ticketStatus == 'OPEN'}" 
@@ -62,7 +72,7 @@
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(tickets)}">
-                                <td colspan="5" class="text-center py-5 text-muted">No tickets found.</td>
+                                <td colspan="6" class="text-center py-5 text-muted">No tickets found.</td>
                             </tr>
                         </tbody>
                     </table>

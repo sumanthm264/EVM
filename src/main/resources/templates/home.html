@@ -66,19 +66,51 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-        <div class="container-fluid px-5">
-            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-                <i class="fas fa-calendar-check fa-1x me-2 text-primary-color"
-                    style="font-size: 3rem; color: var(--primary-color);"></i>
-                <span style="color: var(--primary-color); font-weight: 700; letter-spacing: -1px;">Event Venue Management</span>
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <a th:href="@{/login}" class="btn btn-primary">Log In</a>
-                <a th:href="@{/register}" class="btn btn-outline-primary">Sign Up</a>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div class="container-fluid px-5">
+
+        <!-- BRAND -->
+        <!-- Anonymous → Home -->
+        <!-- Logged in → Dashboard -->
+        <a class="navbar-brand d-flex align-items-center"
+           sec:authorize="isAnonymous()"
+           th:href="@{/}">
+            <i class="fas fa-calendar-check me-2"
+               style="font-size: 3rem; color: var(--primary-color);"></i>
+            <span style="color: var(--primary-color); font-weight: 700;">
+                Event Venue Management
+            </span>
+        </a>
+
+        <a class="navbar-brand d-flex align-items-center"
+           sec:authorize="isAuthenticated()"
+           th:href="@{/dashboard}">
+            <i class="fas fa-calendar-check me-2"
+               style="font-size: 3rem; color: var(--primary-color);"></i>
+            <span style="color: var(--primary-color); font-weight: 700;">
+                Event Venue Management
+            </span>
+        </a>
+
+        <!-- ANONYMOUS USER -->
+        <div class="d-flex align-items-center gap-3"
+             sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="btn btn-primary">Log In</a>
+            <a th:href="@{/register}" class="btn btn-outline-primary">Sign Up</a>
         </div>
-    </nav>
+
+        <!-- LOGGED-IN USER -->
+        <div class="d-flex align-items-center gap-3"
+             sec:authorize="isAuthenticated()">
+            <a th:href="@{/dashboard}" class="btn btn-primary">Dashboard</a>
+            <a th:href="@{/logout}" class="btn btn-outline-danger">Logout</a>
+        </div>
+
+    </div>
+</nav>
+
 
     <!-- Main Content -->
     <div class="content-container">

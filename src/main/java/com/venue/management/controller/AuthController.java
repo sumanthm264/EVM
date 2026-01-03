@@ -3,6 +3,8 @@ package com.venue.management.controller;
 import com.venue.management.entity.User;
 import com.venue.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +40,11 @@ public class AuthController {
     }
 
     @GetMapping("/")
-    public String home() {
-        return "home";
+    public String rootRedirect(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            return "redirect:/dashboard";
+        }
+        return "index"; // home page
     }
+
 }

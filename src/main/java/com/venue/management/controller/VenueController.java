@@ -42,6 +42,13 @@ public class VenueController {
         try {
             if (venue.getVenueId() == null) {
                 venue.setStatus("AVAILABLE");
+            } else {
+                // When editing, preserve the existing status if not set
+                if (venue.getStatus() == null || venue.getStatus().isEmpty()) {
+                    Venue existingVenue = venueService.getVenueById(venue.getVenueId())
+                        .orElseThrow(() -> new RuntimeException("Venue not found"));
+                    venue.setStatus(existingVenue.getStatus());
+                }
             }
 
             // Handle image upload

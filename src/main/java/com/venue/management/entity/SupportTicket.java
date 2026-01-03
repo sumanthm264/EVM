@@ -24,17 +24,21 @@ public class SupportTicket {
 
     private LocalDateTime resolvedDate;
 
+    @Column(columnDefinition = "TEXT")
+    private String resolutionNotes;
+
     public SupportTicket() {
     }
 
     public SupportTicket(Long ticketId, User customer, String issueDescription, String ticketStatus,
-            LocalDateTime createdDate, LocalDateTime resolvedDate) {
+            LocalDateTime createdDate, LocalDateTime resolvedDate, String resolutionNotes) {
         this.ticketId = ticketId;
         this.customer = customer;
         this.issueDescription = issueDescription;
         this.ticketStatus = ticketStatus;
         this.createdDate = createdDate;
         this.resolvedDate = resolvedDate;
+        this.resolutionNotes = resolutionNotes;
     }
 
     public Long getTicketId() {
@@ -83,5 +87,13 @@ public class SupportTicket {
 
     public void setResolvedDate(LocalDateTime resolvedDate) {
         this.resolvedDate = resolvedDate;
+    }
+
+    public String getResolutionNotes() {
+        return resolutionNotes;
+    }
+
+    public void setResolutionNotes(String resolutionNotes) {
+        this.resolutionNotes = resolutionNotes;
     }
 }

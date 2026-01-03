@@ -39,10 +39,11 @@ public class SupportTicketServiceImpl implements SupportTicketService {
     }
 
     @Override
-    public SupportTicket resolveTicket(Long id) {
+    public SupportTicket resolveTicket(Long id, String resolutionNotes) {
         SupportTicket ticket = supportTicketRepository.findById(id).orElseThrow();
         ticket.setTicketStatus("RESOLVED");
         ticket.setResolvedDate(LocalDateTime.now());
+        ticket.setResolutionNotes(resolutionNotes);
         return supportTicketRepository.save(ticket);
     }
     
