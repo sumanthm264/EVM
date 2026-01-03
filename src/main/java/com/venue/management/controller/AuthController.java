@@ -44,7 +44,7 @@ public class AuthController {
         if (userDetails != null) {
             return "redirect:/dashboard";
         }
-        return "index"; // home page
+        return "home"; // home page
     }
 
 }
